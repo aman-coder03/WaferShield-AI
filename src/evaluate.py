@@ -1,21 +1,18 @@
 import torch
 import torch.nn as nn
-from torchvision.models import efficientnet_b0
+import timm
 from dataset import get_dataloaders
 from sklearn.metrics import classification_report, confusion_matrix
-import numpy as np
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Load data
 train_loader, val_loader, test_loader, classes = get_dataloaders("data")
 num_classes = len(classes)
 
-model = efficientnet_b0(weights=None)
-
-model.classifier[1] = nn.Sequential(
-    nn.Dropout(0.4),
-    nn.Linear(model.classifier[1].in_features, num_classes)
+model = timm.create_model(
+    "efficientnet_lite0",
+    pretrained=False,
+    num_classes=num_classes
 )
 
 model.load_state_dict(torch.load("models/model.pth", map_location=device))

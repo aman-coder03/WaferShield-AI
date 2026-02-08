@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 def get_dataloaders(data_dir, batch_size=32):
 
     train_transform = transforms.Compose([
-        transforms.Resize((288, 288)),
+        transforms.Resize((320, 320)),
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
         transforms.RandomRotation(20),
@@ -18,7 +18,7 @@ def get_dataloaders(data_dir, batch_size=32):
     ])
 
     val_test_transform = transforms.Compose([
-        transforms.Resize((288, 288)),
+        transforms.Resize((320, 320)),
         transforms.ToTensor(),
         transforms.Normalize(
             mean=[0.485, 0.456, 0.406],

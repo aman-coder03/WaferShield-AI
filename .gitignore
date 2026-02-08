@@ -9,6 +9,7 @@ data/
 data_raw/
 *.pkl
 *.pth
+*.onnx
 
 # System
 .DS_Store
