@@ -173,6 +173,17 @@ WaferShield-AI/
 │   ├── val/
 │   └── test/
 │
+│── models/
+│   ├── model.pth
+│   └── model_fp16.onnx
+│
+├── results/
+│   ├── confusion_matrix.png
+│   ├── gradcam_Center.png
+│   ├── gradcam_Edge-Loc.png
+│   ├── gradcam_Loc.png
+│   └── gradcam_Random.png
+│
 ├── src/
 │   ├── extract_LSWMD.py        # Raw dataset extraction
 │   ├── split_dataset.py        # Train/Val/Test split
