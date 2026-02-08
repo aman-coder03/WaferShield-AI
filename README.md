@@ -39,7 +39,8 @@ WaferShield AI addresses this by enabling defect classification suitable for edg
 
 ## Dataset
 
-Dataset used: WM-811K (LSWMD)  
+Dataset used: WM-811K (LSWMD)
+Dataset link: https://www.kaggle.com/datasets/qingyi/wm811k-wafer-map
 Total available wafer maps: 811,457  
 
 ---
