@@ -114,12 +114,10 @@ Why EfficientNet-Lite0?
 
 ### ONNX Deployment Accuracy
 
-| Format | Size | Accuracy |
-|--------|------|----------|
-| FP32 ONNX | 13.48 MB | 90.34% |
-| FP16 ONNX | 6.76 MB | 89.77% |
-
-Final Deployment Model: FP16 ONNX (6.76 MB)
+Final Deployment Model:
+- Format: FP16 ONNX
+- Model Size: 6.76 MB
+- Accuracy: 89.77%
 
 ---
 
@@ -160,7 +158,6 @@ The model focuses on defect regions rather than wafer background.
 ## Key Observations
 
 - EfficientNet significantly improved spatial defect recognition.
-- Near-full and Random defects are highly separable.
 - Loc remains the most challenging due to similarity with Edge-Loc.
 - Validation and test performance are consistent → minimal overfitting.
 
@@ -192,7 +189,7 @@ WaferShield-AI/
 │   ├── model.pth               # Trained PyTorch weights
 │   └── model_fp16.onnx         # Final deployment model (6.76 MB)
 │
-|
+│
 ├── Phase1.md                   # Phase 1 submission document (problem, dataset, model, results)
 ├── README.md                   # Project overview and usage instructions
 └── requirements.txt            # Python dependencies for reproducibility
