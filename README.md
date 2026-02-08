@@ -153,6 +153,13 @@ Observations:
 
 The model focuses on defect regions rather than wafer background.
 
+---
+
+## Confusion Matrix (Test Set)
+
+![Confusion Matrix](results/confusion_matrix.png)
+
+The model demonstrates strong class-wise performance with minimal confusion across major defect categories.
 
 ---
 
