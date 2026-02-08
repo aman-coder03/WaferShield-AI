@@ -165,6 +165,7 @@ The model focuses on defect regions rather than wafer background.
 
 ## Project Structure
 
+```
 WaferShield-AI/
 │
 ├── data/
@@ -193,7 +194,7 @@ WaferShield-AI/
 ├── Phase1.md                   # Phase 1 submission document (problem, dataset, model, results)
 ├── README.md                   # Project overview and usage instructions
 └── requirements.txt            # Python dependencies for reproducibility
-
+```
 
 ---
 
