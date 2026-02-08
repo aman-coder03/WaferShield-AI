@@ -3,10 +3,8 @@ import numpy as np
 import time
 from dataset import get_dataloaders
 
-# Load test data
 _, _, test_loader, classes = get_dataloaders("data", batch_size=1)
 
-# Load ONNX model
 session = ort.InferenceSession(
     "models/model_fp16.onnx",
     providers=["CPUExecutionProvider"]
@@ -17,13 +15,11 @@ input_name = session.get_inputs()[0].name
 total_images = 0
 inference_time = 0.0
 
-# Warm-up (important)
 for images, _ in test_loader:
     images_np = images.numpy().astype(np.float16)
     session.run(None, {input_name: images_np})
     break
 
-# Benchmark
 for images, _ in test_loader:
     images_np = images.numpy().astype(np.float16)
 

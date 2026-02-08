@@ -193,8 +193,10 @@ WaferShield-AI/
 │   └── model_fp16.onnx         # Final deployment model (6.76 MB)
 │
 |
-├── Phase1.md
-└── README.md
+├── Phase1.md                   # Phase 1 submission document (problem, dataset, model, results)
+├── README.md                   # Project overview and usage instructions
+└── requirements.txt            # Python dependencies for reproducibility
+
 
 ---
 
