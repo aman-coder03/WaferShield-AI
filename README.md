@@ -1,5 +1,7 @@
 # WaferShield AI: Protecting Semiconductor Yield with Edge AI
 
+---
+
 ## Overview
 
 WaferShield AI is an Edge-AI powered defect classification system designed to detect and classify semiconductor wafer defects using deep learning.
@@ -11,7 +13,14 @@ The system is built to reflect real fabrication constraints:
 - Structured dataset pipeline
 - Clear evaluation and benchmarking
 
-Final Test Accuracy Achieved: **80%**
+Final Test Accuracy Achieved: **90.34%**
+
+Edge Deployment Model:
+- EfficientNet-Lite0 (Transfer Learning)
+- FP16 ONNX Format
+- Model Size: 6.76 MB
+- Average Latency: 8.55 ms (CPU)
+- Throughput: 116.9 images/sec
 
 ---
 
@@ -30,39 +39,42 @@ WaferShield AI addresses this by enabling defect classification suitable for edg
 
 ## Dataset
 
-Dataset Used: **LSWMD (Wafer Map Dataset)**  
-Total wafer maps: 811,457  
-Defect classes available:
-- Center
-- Donut
-- Edge-Loc
-- Edge-Ring
-- Loc
-- Random
-- Scratch
-- Near-full
-- none
+Dataset used: WM-811K (LSWMD)  
+Total available wafer maps: 811,457  
 
-### Selected Classes
+---
 
-We selected 8 defect classes (excluding "none"):
+## Selected Classes (8 Total)
+
+The following 8 classes were selected:
 
 - Center  
+- Clean (mapped from "none")  
 - Donut  
 - Edge-Loc  
 - Edge-Ring  
 - Loc  
 - Random  
 - Scratch  
-- Near-full  
 
-### Balanced Dataset Strategy
+---
 
-To ensure class balance:
-- 149 samples per class
-- Total training images: 1,192
-- 70/15/15 Train/Validation/Test split
-- 22 test samples per class
+## Dataset Size and Balance
+
+- 149 images per class  
+- Total dataset size: 1,192 images  
+- Balanced class distribution  
+
+---
+
+## Data Split
+
+- Train: 70%  
+- Validation: 15%  
+- Test: 15%  
+- 22 test samples per class  
+
+Stratified and balanced across all classes.
 
 ---
 
@@ -83,47 +95,65 @@ To ensure class balance:
 
 ## Model Architecture
 
-Base Model: **EfficientNet-B0 (Pretrained on ImageNet)**
+Final Architecture: EfficientNet-Lite0 (Transfer Learning)
 
-### Modifications
-- Resolution: 288x288
-- Partial fine-tuning (last blocks unfrozen)
-- Custom classifier head:
-  - Dropout(0.4)
-  - Linear(num_classes)
-
-### Training Strategy
-- Weighted CrossEntropy Loss
-- Label smoothing (0.1)
-- Adam optimizer (lr=0.0003)
-- Weight decay (1e-4)
-- StepLR scheduler
-- 25 epochs training
+Why EfficientNet-Lite0?
+- Designed for mobile & embedded deployment
+- Better accuracy-to-size tradeoff
+- Optimized for edge compute constraints
 
 ---
 
 ## Final Results
 
-### Validation Accuracy
-**85.8%**
+### PyTorch Test Accuracy
+90.34%
 
-### Test Accuracy
-**80%**
+### Macro F1 Score
+~0.90
 
-### Classification Summary
+### ONNX Deployment Accuracy
 
-| Class       | F1 Score |
-|------------|----------|
-| Center     | 0.67     |
-| Donut      | 0.95     |
-| Edge-Loc   | 0.66     |
-| Edge-Ring  | 0.84     |
-| Loc        | 0.53     |
-| Near-full  | 0.98     |
-| Random     | 1.00     |
-| Scratch    | 0.73     |
+| Format | Size | Accuracy |
+|--------|------|----------|
+| FP32 ONNX | 13.48 MB | 90.34% |
+| FP16 ONNX | 6.76 MB | 89.77% |
 
-Macro F1 Score: **0.79**
+Final Deployment Model: FP16 ONNX (6.76 MB)
+
+---
+
+## Edge Benchmarking (CPU)
+
+Platform: ONNX Runtime (CPUExecutionProvider)
+
+- Total Test Images: 176
+- Total Inference Time: 1.5056 seconds
+- Average Latency: 8.55 ms per image
+- Throughput: 116.9 images/sec
+
+This confirms real-time suitability for high-volume inspection environments.
+
+---
+
+## Explainability (Grad-CAM)
+
+Grad-CAM was applied to representative defect samples:
+
+- Center
+- Edge-Loc
+- Random
+- Loc
+
+Observations:
+
+- Center → strong central activation
+- Edge-Loc → boundary-focused activation
+- Random → distributed activation
+- Loc → localized subtle activation
+
+The model focuses on defect regions rather than wafer background.
+
 
 ---
 
@@ -138,23 +168,32 @@ Macro F1 Score: **0.79**
 
 ## Project Structure
 
-WaferShield AI/
+WaferShield-AI/
 │
 ├── data/
-│ ├── train/
-│ ├── val/
-│ └── test/
+│   ├── train/
+│   ├── val/
+│   └── test/
 │
 ├── src/
-│ ├── extract_LSWMD.py
-│ ├── split_dataset.py
-│ ├── dataset.py
-│ ├── train.py
-│ └── evaluate.py
+│   ├── extract_LSWMD.py        # Raw dataset extraction
+│   ├── split_dataset.py        # Train/Val/Test split
+│   ├── dataset.py              # Data loaders & preprocessing
+│   ├── train.py                # Model training
+│   ├── evaluate.py             # PyTorch evaluation
+│   ├── confusion_matrix.py     # Confusion matrix generation
+│   ├── gradcam.py              # Grad-CAM explainability
+│   ├── export_onnx.py          # ONNX export (FP16)
+│   ├── onnx_inference.py       # ONNX accuracy testing
+│   ├── benchmark.py            # Latency & throughput benchmarking
+│   └── quantize_model.py       # Optional quantization experiments
 │
 ├── models/
-│ └── model.pth
+│   ├── model.pth               # Trained PyTorch weights
+│   └── model_fp16.onnx         # Final deployment model (6.76 MB)
 │
+|
+├── Phase1.md
 └── README.md
 
 ---
@@ -164,37 +203,35 @@ WaferShield AI/
 ### 1️⃣ Extract Dataset
 python src/extract_LSWMD.py
 
-
 ### 2️⃣ Split Dataset
 python src/split_dataset.py
 
-
 ### 3️⃣ Train Model
 python src/train.py
-
 
 ### 4️⃣ Evaluate Model
 python src/evaluate.py
 
 ---
 
-## Next Steps (Edge Deployment)
+## Next Steps (Phase 2 & 3)
 
-- Export trained model to ONNX
-- Apply model quantization (INT8)
-- Benchmark inference latency
-- Deploy using NXP eIQ toolchain
+- Validate model on hackathon-provided test dataset
+- Port model to NXP eIQ flow
+- Generate edge deployment artifacts (bit-file)
+- Optimize model stack for embedded deployment
 
 ---
 
 ## Engineering Highlights
 
-- Balanced dataset construction
-- Structured ML pipeline
-- Controlled fine-tuning strategy
-- Robust evaluation metrics
-- Edge-ready architecture
-- Lightweight backbone (EfficientNet-B0)
+- Balanced 8-class dataset construction
+- Lightweight edge-optimized model (<7 MB)
+- ~90% defect classification accuracy
+- Real-time CPU inference (<10 ms per image)
+- Grad-CAM explainability integration
+- ONNX export and edge deployment readiness
+- Structured and reproducible ML pipeline
 
 ---
 
