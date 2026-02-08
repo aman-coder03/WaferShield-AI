@@ -2,7 +2,7 @@
 
 ---
 
-## Summary
+## Executive Summary
 
 WaferShield AI is an Edge-AI powered defect classification system designed to detect and classify semiconductor wafer defects using deep learning.
 
@@ -77,13 +77,6 @@ The following 8 classes were selected:
 - 22 test samples per class  
 
 Stratified and balanced across all classes.
-
----
-
-## Model results
-
-Test Accuracy: 90.34%  
-Macro F1 Score: ~0.90  
 
 ---
 
@@ -203,16 +196,6 @@ The model focuses on defect regions rather than wafer background.
 - Loc remains the most challenging due to similarity with Edge-Loc.  
 - Validation and test performance are consistent → minimal overfitting.  
 
-The model focuses on defect regions rather than wafer background.
-
----
-
-## Confusion Matrix (Test Set)
-
-![Confusion Matrix](results/confusion_matrix.png)
-
-The model demonstrates strong class-wise performance with clear diagonal dominance.  
-
 ---
 
 ## Project Structure
@@ -260,16 +243,16 @@ WaferShield-AI/
 ## How to Run
 
 ### Extract Dataset
-python src/extract_LSWMD.py
+`python src/extract_LSWMD.py`
 
 ### Split Dataset
-python src/split_dataset.py
+`python src/split_dataset.py`
 
 ### Train Model
-python src/train.py
+`python src/train.py`
 
 ### Evaluate Model
-python src/evaluate.py
+`python src/evaluate.py`
 
 ---
 
