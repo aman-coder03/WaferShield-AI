@@ -2,7 +2,7 @@
 
 ## Overview
 
-YieldGuard is an Edge-AI powered defect classification system designed to detect and classify semiconductor wafer defects using deep learning.
+WaferShield AI is an Edge-AI powered defect classification system designed to detect and classify semiconductor wafer defects using deep learning.
 
 The system is built to reflect real fabrication constraints:
 - Lightweight model architecture
@@ -24,7 +24,7 @@ Semiconductor fabrication generates large volumes of wafer inspection images. Ma
 - Bandwidth limitations
 - Scalability challenges
 
-YieldGuard addresses this by enabling defect classification suitable for edge deployment.
+WaferShield AI addresses this by enabling defect classification suitable for edge deployment.
 
 ---
 
@@ -138,7 +138,7 @@ Macro F1 Score: **0.79**
 
 ## Project Structure
 
-YieldGuard/
+WaferShield AI/
 │
 ├── data/
 │ ├── train/
@@ -200,6 +200,6 @@ python src/evaluate.py
 
 ## Authors
 
-Team: YieldGuard  
+Team: WaferShield AI  
 Domain: AI-enabled Chip Design  
 Track: Edge-AI Defect Classification
