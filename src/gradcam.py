@@ -60,7 +60,12 @@ for images, labels in test_loader:
 
         heatmap = torch.mean(activations_clone, dim=1).squeeze()
         heatmap = torch.relu(heatmap)
+
         heatmap = heatmap.cpu().numpy()
+        heatmap = np.maximum(heatmap, 0)
+
+        heatmap = np.where(heatmap > 0.4 * heatmap.max(), heatmap, 0)
+
         heatmap /= (np.max(heatmap) + 1e-8)
 
         heatmap = cv2.resize(heatmap, (320, 320))
@@ -71,7 +76,7 @@ for images, labels in test_loader:
         original = images.squeeze().permute(1, 2, 0).cpu().numpy()
         original = (original - original.min()) / (original.max() - original.min() + 1e-8)
 
-        overlay = heatmap * 0.4 + original
+        overlay = 0.6 * original + 0.4 * heatmap
         overlay = overlay / np.max(overlay)
 
         plt.figure(figsize=(8,4))
@@ -92,7 +97,7 @@ for images, labels in test_loader:
         plt.axis("off")
 
         plt.tight_layout()
-        plt.savefig(f"gradcam_{label_name}.png")
+        plt.savefig(f"gradcam_{label_name}.png", dpi=300)
         plt.close()
 
         print(f"Saved Grad-CAM for {label_name}")
