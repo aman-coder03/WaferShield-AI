@@ -2,16 +2,17 @@
 
 ---
 
-## Overview
+## Summary
 
 WaferShield AI is an Edge-AI powered defect classification system designed to detect and classify semiconductor wafer defects using deep learning.
 
-The system is built to reflect real fabrication constraints:
-- Lightweight model architecture
-- Balanced accuracy vs compute tradeoff
-- Deployment-ready (ONNX export compatible)
-- Structured dataset pipeline
-- Clear evaluation and benchmarking
+The system reflects real fabrication constraints:
+
+- Lightweight model architecture  
+- Balanced accuracy vs compute tradeoff  
+- Deployment-ready (ONNX export compatible)  
+- Structured dataset pipeline  
+- Clear evaluation and benchmarking  
 
 Final Test Accuracy Achieved: **90.34%**
 
@@ -28,10 +29,10 @@ Edge Deployment Model:
 
 Semiconductor fabrication generates large volumes of wafer inspection images. Manual review and centralized processing introduce:
 
-- High latency
-- Infrastructure overhead
-- Bandwidth limitations
-- Scalability challenges
+- High latency  
+- Infrastructure overhead  
+- Bandwidth limitations  
+- Scalability challenges  
 
 WaferShield AI addresses this by enabling defect classification suitable for edge deployment.
 
@@ -45,7 +46,7 @@ WaferShield AI addresses this by enabling defect classification suitable for edg
 
 ---
 
-## Selected Classes (8 Total)
+### Selected Classes (8 Total)
 
 The following 8 classes were selected:
 
@@ -60,7 +61,7 @@ The following 8 classes were selected:
 
 ---
 
-## Dataset Size and Balance
+### Dataset Size and Balance
 
 - 149 images per class  
 - Total dataset size: 1,192 images  
@@ -68,7 +69,7 @@ The following 8 classes were selected:
 
 ---
 
-## Data Split
+### Data Split
 
 - Train: 70%  
 - Validation: 15%  
@@ -76,6 +77,13 @@ The following 8 classes were selected:
 - 22 test samples per class  
 
 Stratified and balanced across all classes.
+
+---
+
+## Model results
+
+Test Accuracy: 90.34%  
+Macro F1 Score: ~0.90  
 
 ---
 
@@ -105,20 +113,49 @@ Why EfficientNet-Lite0?
 
 ---
 
-## Final Results
+## Model Performance
 
-### PyTorch Test Accuracy
-90.34%
+### Test Accuracy
+**90.34%**
 
 ### Macro F1 Score
-~0.90
+~0.90  
 
-### ONNX Deployment Accuracy
+### Per-Class Performance
+
+| Class      | Precision | Recall | F1 Score |
+|------------|-----------|--------|----------|
+| Center     | 0.92      | 1.00   | 0.96     |
+| Clean      | 0.91      | 0.91   | 0.91     |
+| Donut      | 0.88      | 1.00   | 0.94     |
+| Edge-Loc   | 0.67      | 0.91   | 0.77     |
+| Edge-Ring  | 1.00      | 0.86   | 0.93     |
+| Loc        | 1.00      | 0.64   | 0.78     |
+| Random     | 1.00      | 1.00   | 1.00     |
+| Scratch    | 1.00      | 0.91   | 0.95     |
+
+Loc remains the most challenging class due to similarity with Edge-Loc.
+
+---
+
+## Confusion Matrix (Test Set)
+
+![Confusion Matrix](results/confusion_matrix.png)
+
+The model demonstrates strong class-wise performance with clear diagonal dominance.  
+Most misclassification occurs between spatially similar defect patterns (Loc vs Edge-Loc), reflecting inherent structural similarity.
+
+---
+
+## Deployment Model (ONNX)
 
 Final Deployment Model:
-- Format: FP16 ONNX
-- Model Size: 6.76 MB
-- Accuracy: 89.77%
+
+- Format: FP16 ONNX  
+- Model Size: 6.76 MB  
+- ONNX Accuracy: 89.77%  
+
+The lightweight ONNX model ensures edge deployment feasibility.
 
 ---
 
@@ -126,10 +163,10 @@ Final Deployment Model:
 
 Platform: ONNX Runtime (CPUExecutionProvider)
 
-- Total Test Images: 176
-- Total Inference Time: 1.5056 seconds
-- Average Latency: 8.55 ms per image
-- Throughput: 116.9 images/sec
+- Total Test Images: 176  
+- Total Inference Time: 1.5056 seconds  
+- Average Latency: 8.55 ms per image  
+- Throughput: 116.9 images/sec  
 
 This confirms real-time suitability for high-volume inspection environments.
 
@@ -139,17 +176,32 @@ This confirms real-time suitability for high-volume inspection environments.
 
 Grad-CAM was applied to representative defect samples:
 
-- Center
-- Edge-Loc
-- Random
-- Loc
+- Center → strong central activation  
+- Edge-Loc → boundary-focused activation  
+- Random → distributed activation  
+- Loc → localized subtle activation  
 
-Observations:
+The model focuses on defect regions rather than wafer background.
 
-- Center → strong central activation
-- Edge-Loc → boundary-focused activation
-- Random → distributed activation
-- Loc → localized subtle activation
+---
+
+## Engineering Highlights
+
+- Balanced 8-class dataset construction
+- Lightweight edge-optimized model (<7 MB)
+- ~90% defect classification accuracy
+- Real-time CPU inference (<10 ms per image)
+- Grad-CAM explainability integration
+- ONNX export and edge deployment readiness
+- Structured and reproducible ML pipeline
+
+---
+
+## Key Observations
+
+- EfficientNet significantly improved spatial defect recognition.  
+- Loc remains the most challenging due to similarity with Edge-Loc.  
+- Validation and test performance are consistent → minimal overfitting.  
 
 The model focuses on defect regions rather than wafer background.
 
@@ -159,15 +211,7 @@ The model focuses on defect regions rather than wafer background.
 
 ![Confusion Matrix](results/confusion_matrix.png)
 
-The model demonstrates strong class-wise performance with minimal confusion across major defect categories.
-
----
-
-## Key Observations
-
-- EfficientNet significantly improved spatial defect recognition.
-- Loc remains the most challenging due to similarity with Edge-Loc.
-- Validation and test performance are consistent → minimal overfitting.
+The model demonstrates strong class-wise performance with clear diagonal dominance.  
 
 ---
 
@@ -180,10 +224,6 @@ WaferShield-AI/
 │   ├── train/
 │   ├── val/
 │   └── test/
-│
-│── models/
-│   ├── model.pth
-│   └── model_fp16.onnx
 │
 ├── results/
 │   ├── confusion_matrix.png
@@ -219,16 +259,16 @@ WaferShield-AI/
 
 ## How to Run
 
-### 1️⃣ Extract Dataset
+### Extract Dataset
 python src/extract_LSWMD.py
 
-### 2️⃣ Split Dataset
+### Split Dataset
 python src/split_dataset.py
 
-### 3️⃣ Train Model
+### Train Model
 python src/train.py
 
-### 4️⃣ Evaluate Model
+### Evaluate Model
 python src/evaluate.py
 
 ---
@@ -239,18 +279,6 @@ python src/evaluate.py
 - Port model to NXP eIQ flow
 - Generate edge deployment artifacts (bit-file)
 - Optimize model stack for embedded deployment
-
----
-
-## Engineering Highlights
-
-- Balanced 8-class dataset construction
-- Lightweight edge-optimized model (<7 MB)
-- ~90% defect classification accuracy
-- Real-time CPU inference (<10 ms per image)
-- Grad-CAM explainability integration
-- ONNX export and edge deployment readiness
-- Structured and reproducible ML pipeline
 
 ---
 
